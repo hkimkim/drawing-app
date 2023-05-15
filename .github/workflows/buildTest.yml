@@ -1,0 +1,32 @@
+
+# A simple DLang Continuous Integration file
+name: DLang CI
+
+# This action is pushed on any push to a specific branch,
+# in this case, the master branch, although you could add others.
+on:
+  push:
+    branches: [ main ]
+
+# Every github action needs at least one job.
+# We could have multiple jobs, but for now I am only going to include one here.
+jobs:
+  build_and_test: # This is the name of our job, and you will see it in the 'Actions' tab.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Quick check to see where we are and who we are.
+        run: pwd && whoami && ls -l
+      - name: Update packages on linux
+        run: sudo apt-get update
+      - uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ldc-latest
+      - name: Install sdl dependency
+        run: sudo apt-get install -y libsdl2-dev
+      - name: build project code
+        run: cd ./FinalProject/graphics_project && dub build 
+      - name: Setup SDL
+        run: sudo apt-get install xvfb xorg xauth openbox lib32z1 lib32ncurses6 libbz2-1.0:amd64 # xorg is needed to set DISPLAY variable later
+      - name: Run graphical application tests 
+        run: cd ./FinalProject/graphics_project && xvfb-run --server-args="-screen 0 1024x768x24" dub test 

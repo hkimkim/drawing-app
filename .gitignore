@@ -1,0 +1,4 @@
+FinalProject/graphics_project/.dub/build/*
+FinalProject/graphics_project/bin
+FinalProject/graphics_project/bin/*
+FinalProject/graphics_project/dub.selections.json
